@@ -42,12 +42,12 @@ PaduAmpAudioProcessorEditor::PaduAmpAudioProcessorEditor (PaduAmpAudioProcessor&
     setResizeLimits (720, 360, 1200, 620);
 
     title.setText ("PADU AMP", juce::dontSendNotification);
-    title.setFont (juce::FontOptions (32.0f, juce::Font::bold));
+    title.setFont (juce::Font (32.0f, juce::Font::bold));
     title.setColour (juce::Label::textColourId, juce::Colour (0xffffa244));
     addAndMakeVisible (title);
 
     subtitle.setText ("SATURATED GUITAR AMP", juce::dontSendNotification);
-    subtitle.setFont (juce::FontOptions (12.0f));
+    subtitle.setFont (juce::Font (12.0f));
     subtitle.setColour (juce::Label::textColourId, juce::Colour (0xff8e949c));
     addAndMakeVisible (subtitle);
 
@@ -86,7 +86,7 @@ void PaduAmpAudioProcessorEditor::setupKnob (juce::Slider& s, juce::Label& l, co
 
     l.setText (name, juce::dontSendNotification);
     l.setJustificationType (juce::Justification::centred);
-    l.setFont (juce::FontOptions (12.0f, juce::Font::bold));
+    l.setFont (juce::Font (12.0f, juce::Font::bold));
     addAndMakeVisible (l);
 }
 
