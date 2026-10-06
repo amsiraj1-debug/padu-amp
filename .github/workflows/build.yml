@@ -9,23 +9,36 @@ on:
 
 jobs:
   build-windows-vst3:
-    runs-on: windows-latest
+    runs-on: windows-2022
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Configure
-        run: cmake -S . -B build -G "Visual Studio 17 2022" -A x64 -DCMAKE_BUILD_TYPE=Release
+      - name: Set up MSVC environment
+        uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: x64
 
-      - name: Build
-        run: cmake --build build --config Release --target PaduAmp_VST3 --parallel 2
+      - name: Configure with Ninja
+        shell: pwsh
+        run: |
+          cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release
+
+      - name: Build VST3
+        shell: pwsh
+        run: |
+          cmake --build build --target PaduAmp_VST3 --parallel 2
 
       - name: Locate VST3
         shell: pwsh
         run: |
-          $vst = Get-ChildItem -Path build -Recurse -Filter "Padu Amp.vst3" | Select-Object -First 1
-          if (-not $vst) { throw "Padu Amp.vst3 was not produced" }
+          $vst = Get-ChildItem -Path build -Recurse -Directory -Filter "Padu Amp.vst3" | Select-Object -First 1
+          if (-not $vst) {
+            Write-Host "Build tree contents:"
+            Get-ChildItem -Path build -Recurse | Select-Object FullName
+            throw "Padu Amp.vst3 was not produced"
+          }
           New-Item -ItemType Directory -Force -Path artifact | Out-Null
           Copy-Item -Recurse -Force $vst.FullName "artifact/Padu Amp.vst3"
 
